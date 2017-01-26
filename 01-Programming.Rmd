@@ -1,8 +1,60 @@
 # In-Class Programming Activity, Day 1
 
-Your work goes here ...
+## Meghan Roffler
 
 
+##Task 1
+```{r}
+library(mosaicData)
+```
+
+##Task 2 
+```{r}
+Sentence = "Today is"
+Currentdate = date()
+answer = paste(Sentence,Currentdate)
+print(answer)
+```
+
+##Task 3a
+```{r}
+head(Galton)
+```
+
+##Task 3b
+```{r}
+dim(Galton)
+```
+
+##Task 3c
+```{r}
+mean(Galton$height)
+```
+
+##Task 4
+```{r}
+A = matrix(c(1,4,2,5,3,6), nrow =2, ncol=3)
+print(A)
+```
+
+##Task 5x
+```{r}
+task5x <- runif(1000, 0.0, 1.0)
+print(task5x)
+```
+
+##Task 5y
+```{r}
+task5y <- runif(1000, 0.0, 1.0)
+print(task5y)
+```
+
+##Task 5pi
+```{r}
+task5pi <- sqrt(task5x^2+task5y^2)
+ans <- length(task5pi[ task5pi < 1])
+print(ans/1000)
+```
 
 ## Test statements
 
