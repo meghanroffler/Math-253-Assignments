@@ -29,13 +29,11 @@ library(ISLR)
 ##Task5top
 ```{r}
 task5top <- Auto[1:5, 1:3]
-task5top
 ```
 
 ##Task5bottom 
 ```{r}
 task5bottom <- Auto[393:397, 7:9]
-task5bottom
 ```
 
 ##Task6
