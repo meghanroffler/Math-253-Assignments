@@ -38,13 +38,11 @@ task4 = matrix(c(1,4,2,5,3,6), nrow =2, ncol=3)
 ##Task 5x
 ```{r}
 task5x <- runif(1000, 0.0, 1.0)
-print(task5x)
 ```
 
 ##Task 5y
 ```{r}
 task5y <- runif(1000, 0.0, 1.0)
-print(task5y)
 ```
 
 ##Task 5pi
