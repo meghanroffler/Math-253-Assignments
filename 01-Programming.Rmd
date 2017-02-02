@@ -5,36 +5,34 @@
 
 ##Task 1
 ```{r}
-library(mosaicData)
+library(mosaic)
 ```
 
 ##Task 2 
 ```{r}
 Sentence = "Today is"
 Currentdate = date()
-answer = paste(Sentence,Currentdate)
-print(answer)
+task2 = paste(Sentence,Currentdate)
 ```
 
 ##Task 3a
 ```{r}
-head(Galton)
+task3a = names(Galton)
 ```
 
 ##Task 3b
 ```{r}
-dim(Galton)
+task3b = dim(Galton)
 ```
 
 ##Task 3c
 ```{r}
-mean(Galton$height)
+task3c = mean(Galton$height)
 ```
 
 ##Task 4
 ```{r}
-A = matrix(c(1,4,2,5,3,6), nrow =2, ncol=3)
-print(A)
+task4 = matrix(c(1,4,2,5,3,6), nrow =2, ncol=3)
 ```
 
 ##Task 5x
@@ -51,9 +49,12 @@ print(task5y)
 
 ##Task 5pi
 ```{r}
-task5pi <- sqrt(task5x^2+task5y^2)
-ans <- length(task5pi[ task5pi < 1])
-print(ans/1000)
+lgth <- sqrt(task5x^2+task5y^2)
+lessthanone <- lgth <= 1
+num <- sum(lessthanone)
+task5pi<- 4*(num/1000)
+task5pi
+
 ```
 
 ## Test statements

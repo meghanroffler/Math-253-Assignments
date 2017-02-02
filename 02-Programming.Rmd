@@ -1,7 +1,47 @@
 # In-Class Programming Activity, Day 2
 
-Your work goes here ...
+##Meghan Roffler
 
+##Task1
+```{r}
+##download.file("http://www-bcf.usc.edu/~gareth/ISL/Auto.csv",destfile="Auto.csv")
+```
+```{r}
+auto_file_name <- "/home/local/MAC/mroffler/Math-253 Assignments/Auto.csv"
+```
+
+##Task2 
+```{r}
+Auto=read.csv("/home/local/MAC/mroffler/Math-253 Assignments/Auto.csv")
+```
+
+##Task3
+```{r}
+task3 <- with(Auto, summary(horsepower))
+task3
+```
+
+##Task4
+```{r}
+library(ISLR)
+```
+
+##Task5top
+```{r}
+task5top <- Auto[1:5, 1:3]
+task5top
+```
+
+##Task5bottom 
+```{r}
+task5bottom <- Auto[393:397, 7:9]
+task5bottom
+```
+
+##Task6
+```{r}
+library(scoreActivity)
+```
 
 
 ## Test statements
