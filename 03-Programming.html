@@ -151,14 +151,14 @@ Test_data &lt;- data.frame(College[test_indices,])</code></pre>
 fhat_train &lt;- predict(Yield_mod1, newdata = Train_data)
 MSE_train &lt;-mean(Yield_mod1$residuals^2)
 MSE_train</code></pre>
-<pre><code>## [1] 0.01281982</code></pre>
+<pre><code>## [1] 0.01421989</code></pre>
 </div>
 <div id="task6" class="section level2">
 <h2>Task6</h2>
 <pre class="r"><code>Y_test &lt;- Test_data$Yield
 fhat_test &lt;- predict(Yield_mod1, newdata = Test_data)
 MSE_test &lt;- mean(Yield_mod1$residuals^2)
-MSE_test/MSE_train</code></pre>
+1*(MSE_test/MSE_train)</code></pre>
 <pre><code>## [1] 1</code></pre>
 </div>
 <div id="test-statements" class="section level2">

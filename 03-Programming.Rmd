@@ -40,7 +40,7 @@ MSE_train
 Y_test <- Test_data$Yield
 fhat_test <- predict(Yield_mod1, newdata = Test_data)
 MSE_test <- mean(Yield_mod1$residuals^2)
-MSE_test/MSE_train
+1*(MSE_test/MSE_train)
 ```
 
 
