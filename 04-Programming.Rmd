@@ -1,6 +1,33 @@
 # In-Class Programming Activity, Day 4
 
-Your work goes here ...
+## Meghan Roffler
+
+```{r}
+##Task1
+plot(1, xlim=c(0,100), ylim=c(0,100), type = "n")
+
+##Task2
+x1 <- c(0,100)
+y1 <- c(0,100)
+lines(x1,y1, col = "blue", lwd = 2)
+x2 <- c(0,100,100,0,0)
+y2 <- c(0,0,100,100,0)
+lines(x2,y2, col="blue", lwd = 2)
+
+##Task3
+sequence <- seq(0,2*pi,0.1)
+x3 <- (50+20*cos(sequence))
+y3 <- (60+20*sin(sequence))
+lines(x3,y3, lwd = 2, col = "wheat")
+
+##Task4
+sequence1 <- seq(0,2*pi,0.1)
+x4 <- 10*abs(sin(sequence1))*cos(sequence1)+20
+y4 <- 10*abs(sin(sequence1))*sin(sequence1)+30
+polygon(x4,y4, lwd=2, col="black")
+```
+
+
 
 
 
