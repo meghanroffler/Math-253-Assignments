@@ -1,2 +1,181 @@
 # Topic 1 Exercises
+## Meghan Roffler
+
+##2.4.1
+
+a) Flexible will be better off due to large sample size.
+
+b) Flexible will be worse off due to small sample size. 
+
+c) Flexible will be better off because it has higher degrees of freedom as it is non-linear.
+
+d) Flexible will be worse off because it will try to fit to the noise caused by high variance.
+
+##2.4.2
+
+a) This is a regression problem because we are interested in finding factors that affect CEO salary, which is a number not a category. We are interested in inference because we will use this model to see how these factors affect current CEO salaries, instead of making a prediction about something in the future. n = 500. p = 3. 
+
+b) This is a classification problem because we are interested in finding out whether our new product will be a success or failure, which are two categoires. We are interested in prediction because we will use this model to predict if this product will succeed in the future. n = 20. p = 13. 
+
+c) This is a regression problem because we are interested in finding the % change in US dollars, which is a numerical value. We are interested in prediction because we want to use this model to predict how future US dollars are impacted by other global markets. n = 52. p = 3. 
+
+##2.4.3
+
+As flexibility increases, the training MSE falls because the f curve fits the data more closely as flexibility increases.
+
+Similarly, test MSE falls as flexibility increases. However, it is u-shaped and starts rising when flexibility gets too large. This is because when flexibility gets too high, training data is large because we begin overfitting the data. 
+
+The squared bias decreases as flexibility increases. This is because it is unlikely any real life mondel has a simple linear relationship. So when there is low flexiility (linear), the estimates of f will include quite a lot of bias. 
+
+Variance increases as flexibility increases. When flexibility is high, the model usually fits the observations very closely. So changing any point will cause variance to increase.
+
+The irreducible error is a straight line with no slope because it is a constant. the test MSE curve is always above the irreducible error line. 
+
+##2.4.6
+
+The parametric model assumes a shape for f which means a set of parameteres needs to be added to make f represent the data better. 
+The non-parametric model doesn't assume a shape for f and instead directly uses the data to create a model that corresponds to individual data points as close as possible. 
+The advantages of a parametric approach are: it reduces the problem of estimating f to one of estimating a set of parameters. This makes it simpler becuase it's easier to estimate parameters rather than estimate a model f. 
+The disadvantages of a parametric approach are: the model we choose will usually not match the true
+unknown form of f which can lead to our estimate being poor. It can also overfit the observations if more flexible models are used. 
+
+
+##2.4.7
+a)
+```{r}
+distance <- matrix(c("1","0","3","0","red","3","2","2","0","0","red","2","3","0","1","3","red","3.16","4","0","1","2","green","2.23","5","-1","0","1","green","1.41","6","1","1","1","red","1.73"),ncol=6,byrow=TRUE)
+colnames(distance) <- c("Obs","X1","X2","X3","Y","Distance")
+distance <- as.table(distance)
+distance
+```
+
+b) When K=1, X5 is an element of N0. 
+P(Y=Red|X=X0)=I(Y5=Red) = 0
+P(Y=Green|X=X0)=I(Y5=Green)= 1
+Therefore our prediction is Green. 
+
+c) When K=3, X2, X5, and X6 are elements of N0. 
+P(Y=Red|X=X0)=(1/3)(1+0+1) = (2/3)
+P(Y=Green|X=X0)=(1/3)(0+1+0) = (1/3)
+Therefore our prediction is Red (because 2/3 is larger than 1/3)
+
+d) We would expect the ideal K value to be smaller. This is because as K becomes larger, the boundary becomes more linear. 
+
+##2.4.8
+a)
+```{r}
+library(ISLR)
+download.file("http://www-bcf.usc.edu/~gareth/ISL/College.csv", destfile="College.csv")
+auto_file_name = "/home/local/MAC/mroffler/Math-253 Assignments/College.csv"
+college = read.csv("/home/local/MAC/mroffler/Math-253 Assignments/College.csv")
+```
+
+b)
+```{r}
+rownames (college )=college [,1]
+head(college)
+```
+
+c) 
+```{r}
+summary(college)
+```
+```{r}
+pairs(college[, 1:10])
+```
+```{r}
+plot(college$Private, college$Outstate, xlab = "Private", ylab ="Out of State tuition", main = "Plot c")
+```
+```{r}
+Elite <- rep("No", nrow(college))
+Elite[college$Top10perc > 50] <- "Yes"
+Elite <- as.factor(Elite)
+college$Elite <- Elite
+summary(college$Elite)
+plot(college$Elite, college$Outstate, xlab = "Elite", ylab ="Out of State tuition", main = "Plot c.iv")
+```
+```{r}
+par(mfrow = c(2,2))
+hist(college$Books, col = "blue", xlab = "Books", ylab = "Count")
+hist(college$PhD, col = "green", xlab = "PhD", ylab = "Count")
+hist(college$Grad.Rate, col = "red", xlab = "Grad Rate", ylab = "Count")
+hist(college$perc.alumni, col = "wheat", xlab = "% alumni", ylab = "Count")
+```
+
+```{r}
+variable.names(College)
+```
+```{r}
+summary(college$Apps)
+```
+
+##2.4.9
+```{r}
+auto <- read.csv("Auto.csv", na.strings = "?")
+auto <- na.omit(auto)
+str(auto)
+```
+
+a) 
+Qualitative: name
+Quantitative: mpg, cylinders, displacement, horsepower, weight, acceleration, year, origin
+
+b) 
+```{r}
+mpgRange <- range(auto$mpg)
+cylindersRange <- range(auto$cylinders)
+displacementRange <- range(auto$displacement)
+horsepowerRange <- range(auto$horsepower)
+weightRange <- range(auto$weight)
+accelerationRange <- range(auto$acceleration)
+yearRange <- range(auto$year)
+originRange <- range(auto$origin)
+```
+c) 
+```{r}
+mpgMean <- mean(auto$mpg)
+mpgSD <- sd(auto$mpg)
+cylindersMean <- mean(auto$cylinders)
+cylindersSD <- sd(auto$cylinders)
+displacementMean <- mean(auto$displacement)
+displacementSD <- sd(auto$displacement)
+horsepowerMean <- mean(auto$horsepower)
+horsepowerSD <- sd(auto$horsepower)
+weightMean <- mean(auto$weight)
+weightSD <- sd(auto$weight)
+accelerationMean <- mean(auto$acceleration)
+accelerationSD <- sd(auto$acceleration)
+yearMean <- mean(auto$year)
+yearSD <- sd(auto$year)
+originMean <- mean(auto$origin)
+originSD <- sd(auto$origin)
+```
+d)
+```{r}
+subset <- auto[-c(10:85), -c(4,9)]
+sapply(subset, range)
+sapply(subset, mean)
+sapply(subset, sd)
+```
+e)
+```{r}
+auto$cylinders <- as.factor(auto$cylinders)
+auto$year <- as.factor(auto$year)
+auto$origin <- as.factor(auto$origin)
+pairs(auto)
+```
+
+We can see some general trends here. The year of the car seems to be positively correlated with a lot of factors, such as mpg. mpg is also negative correlated with weight and horsepower. 
+
+f)
+We can see that the variables cylinders, horsepower, year and origin are correlated with mpg, so would be useful in predicting mpg. We can see the correlation of these variables here:
+```{r}
+auto$horsepower <- as.numeric(auto$horsepower)
+cor(auto$weight, auto$horsepower)
+cor(auto$weight, auto$displacement)
+cor(auto$displacement, auto$horsepower)
+```
+which are all high correlation values. 
+
+
 
