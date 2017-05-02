@@ -4,9 +4,7 @@ output:
   pdf_document: default
 ---
 # Topic 4 Exercises: Classification
-
-Programming Assignment: 4.7.11, 4.7.13
-Theory assignment: 4.7.1, 4.7.8, 4.7.9
+## Meghan Roffler
 
 ##4.7.1
 (4.2) <- p(X) = eβ0+β1X/(1+eβ0+β1X)

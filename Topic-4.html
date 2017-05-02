@@ -121,7 +121,9 @@ $(document).ready(function () {
 
 <div id="topic-4-exercises-classification" class="section level1">
 <h1>Topic 4 Exercises: Classification</h1>
-<p>Programming Assignment: 4.7.11, 4.7.13 Theory assignment: 4.7.1, 4.7.8, 4.7.9</p>
+<div id="meghan-roffler" class="section level2">
+<h2>Meghan Roffler</h2>
+</div>
 <div id="section" class="section level2">
 <h2>4.7.1</h2>
 <p>(4.2) &lt;- p(X) = eβ0+β1X/(1+eβ0+β1X) (4.3) &lt;- p(X)/(1−p(X)) = eβ0+β1X</p>
@@ -178,7 +180,7 @@ mod_formula &lt;- mpg01 ~ cylinders + displacement + weight
 mod1 &lt;- lda(mod_formula, data = Training)
 preds1 &lt;- predict(mod1, newdata = Testing)
 mean(Testing$mpg01 != (preds1$posterior[, 2] &gt;= 0.5))</code></pre>
-<pre><code>## [1] 0.122449</code></pre>
+<pre><code>## [1] 0.1020408</code></pre>
 </div>
 <div id="we-have-a-test-error-rate-of-around-11.22" class="section level2">
 <h2>We have a test error rate of around 11.22%</h2>
@@ -188,7 +190,7 @@ mean(Testing$mpg01 != (preds1$posterior[, 2] &gt;= 0.5))</code></pre>
 <pre class="r"><code>mod2 &lt;- qda(mod_formula, data = Training)
 preds2 &lt;- predict(mod2, newdata = Testing )
 mean(Testing$mpg01 != (preds2$posterior[, 2] &gt;= 0.5))</code></pre>
-<pre><code>## [1] 0.1173469</code></pre>
+<pre><code>## [1] 0.1020408</code></pre>
 </div>
 <div id="we-have-a-test-error-rate-of-around-9.69" class="section level2">
 <h2>We have a test error rate of around 9.69%</h2>
@@ -199,7 +201,7 @@ mean(Testing$mpg01 != (preds2$posterior[, 2] &gt;= 0.5))</code></pre>
             data = Training, family = &quot;binomial&quot;)
 preds3 &lt;- predict(mod3, newdata = Testing )
 mean(Testing$mpg01 != (preds3 &gt;= 0.5))</code></pre>
-<pre><code>## [1] 0.1377551</code></pre>
+<pre><code>## [1] 0.1020408</code></pre>
 </div>
 <div id="we-have-a-test-error-rate-of-around-10.71" class="section level2">
 <h2>We have a test error rate of around 10.71%</h2>
