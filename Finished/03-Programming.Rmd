@@ -5,6 +5,7 @@
 ##Task1
 ```{r}
 library(ISLR)
+library(mosaic)
 data(College, package="ISLR")
 ```
 

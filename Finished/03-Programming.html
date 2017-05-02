@@ -127,7 +127,39 @@ $(document).ready(function () {
 <div id="task1" class="section level2">
 <h2>Task1</h2>
 <pre class="r"><code>library(ISLR)
-data(College, package=&quot;ISLR&quot;)</code></pre>
+library(mosaic)</code></pre>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## 
+## Attaching package: 'dplyr'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## Loading required package: mosaicData</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## The 'mosaic' package masks several functions from core packages in order to add additional features.  
+## The original behavior of these functions should not be affected by this.</code></pre>
+<pre><code>## 
+## Attaching package: 'mosaic'</code></pre>
+<pre><code>## The following object is masked from 'package:Matrix':
+## 
+##     mean</code></pre>
+<pre><code>## The following objects are masked from 'package:dplyr':
+## 
+##     count, do, tally</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     binom.test, cor, cov, D, fivenum, IQR, median, prop.test,
+##     quantile, sd, t.test, var</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     max, mean, min, prod, range, sample, sum</code></pre>
+<pre class="r"><code>data(College, package=&quot;ISLR&quot;)</code></pre>
 </div>
 <div id="task2" class="section level2">
 <h2>Task2</h2>
@@ -151,7 +183,7 @@ Test_data &lt;- data.frame(College[test_indices,])</code></pre>
 fhat_train &lt;- predict(Yield_mod1, newdata = Train_data)
 MSE_train &lt;-mean(Yield_mod1$residuals^2)
 MSE_train</code></pre>
-<pre><code>## [1] 0.01239054</code></pre>
+<pre><code>## [1] 0.01269859</code></pre>
 </div>
 <div id="task6" class="section level2">
 <h2>Task6</h2>
