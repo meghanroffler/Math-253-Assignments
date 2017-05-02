@@ -1,2 +1,139 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # Topic 4 Exercises: Classification
 
+Programming Assignment: 4.7.11, 4.7.13
+Theory assignment: 4.7.1, 4.7.8, 4.7.9
+
+##4.7.1
+(4.2) <- p(X) = eβ0+β1X/(1+eβ0+β1X)
+(4.3) <- p(X)/(1−p(X)) = eβ0+β1X
+
+If we want to prove that they're equivalent, we first set eβ0+β1X to Y. 
+That means 
+(4.2) <-  P(X) = Y/(1+Y)  <-  P(X)(1+Y) = Y  <-  P(X)+P(X)Y = Y  <-  P(X) = Y-P(X)Y  <-  
+P(X) = Y(1-P(X))  <-  P(X)/(1-P(X)) = Y
+
+Plug eβ0+β1X back in and you get P(X)/(1-P(X)) = eβ0+β1X which is (4.3)
+
+
+##4.7.8
+
+When we use the KNN method with K=1, we know that the training error rate is 0% because P(Y=j|X=xi)=I(yi=j). This means that the test error rate can be as high as 36% since the average error is 18%. Since the test error rate for KNN (36%) is most likely higher than the error for logistic regression (30%), we would prefer the logistic regression method. 
+ 
+ 
+##4.7.9
+a) Odds = P(X)/(1-P(X))  ->  0.37 = P(X)/(1-P(X))  ->  0.37 = 1.37P(X)  -> P(X) = 0.27. 
+On average, 27% of people default. 
+
+b) Odds = P(X)/(1-P(X))  ->  Odds = 0.16/0.84 = 0.19
+The odds that she will default are 19%. 
+
+##4.7.11
+
+```{r}
+##part a
+library(ISLR)
+data(Auto)
+attach(Auto)
+mpg01 <- rep(0, length(mpg))
+mpg01[mpg > median(mpg)] <- 1
+Auto <- data.frame(Auto, mpg01)
+```
+##part b
+
+```{r}
+?Auto 
+
+boxplot(cylinders ~ mpg01, data = Auto, main = "Cylinders vs mpg01")
+boxplot(displacement ~ mpg01, data = Auto, main = "Displacement vs mpg01")
+boxplot(weight ~ mpg01, data = Auto, main = "Weight vs mpg01")
+boxplot(acceleration ~ mpg01, data = Auto, main = "Acceleration vs mpg01")
+boxplot(year ~ mpg01, data = Auto, main = "Year vs mpg01")
+```
+#We may conclude that there exists some association between “mpg01” and “cylinders”, “weight”, “displacement”. 
+
+##part c
+```{r}
+training_inds <- sample(1:nrow(Auto), size = nrow(Auto) / 2)
+Training <- Auto[training_inds,]
+Testing  <- Auto[ - training_inds, ]
+```
+
+##part d
+```{r}
+library(MASS)
+mod_formula <- mpg01 ~ cylinders + displacement + weight
+mod1 <- lda(mod_formula, data = Training)
+preds1 <- predict(mod1, newdata = Testing)
+mean(Testing$mpg01 != (preds1$posterior[, 2] >= 0.5))
+```
+## We have a test error rate of around 11.22%
+
+##part e
+```{r}
+mod2 <- qda(mod_formula, data = Training)
+preds2 <- predict(mod2, newdata = Testing )
+mean(Testing$mpg01 != (preds2$posterior[, 2] >= 0.5))
+```
+## We have a test error rate of around 9.69%
+
+##part f
+```{r}
+mod3 <- glm(mod_formula, 
+            data = Training, family = "binomial")
+preds3 <- predict(mod3, newdata = Testing )
+mean(Testing$mpg01 != (preds3 >= 0.5))
+```
+## We have a test error rate of around 10.71%
+
+##part g
+```{r}
+k_vals <- c(1:50)
+error_rate <- rep(NA, length(k_vals))
+Train_mat <- model.matrix(mod_formula, data = Training)
+Test_mat  <- model.matrix(mod_formula, data = Testing)
+for (i in 1:length(k_vals)) {
+  preds <- class::knn(Train_mat, Test_mat, Training$mpg01, k = k_vals[i])
+  error_rate[i] = mean(Testing$mpg01 != as.logical(preds))}
+```
+
+## A K of 10 to 20 is good.
+
+##4.7.13
+
+```{r}
+library(MASS)
+attach(Boston)
+crim01 <- rep(0, length(crim))
+crim01[crim > median(crim)] <- 1
+Boston <- data.frame(Boston, crim01)
+
+train <- 1:(length(crim) / 2)
+test <- (length(crim) / 2 + 1):length(crim)
+Boston.train <- Boston[train, ]
+Boston.test <- Boston[test, ]
+crim01.test <- crim01[test]
+
+fit.glm <- glm(crim01 ~ . - crim01 - crim, data = Boston, family = binomial, subset = train)
+
+probs <- predict(fit.glm, Boston.test, type = "response")
+pred.glm <- rep(0, length(probs))
+pred.glm[probs > 0.5] <- 1
+table(pred.glm, crim01.test)
+
+mean(pred.glm != crim01.test)
+
+fit.glm <- glm(crim01 ~ . - crim01 - crim - chas - nox, data = Boston, family = binomial, subset = train)
+
+probs <- predict(fit.glm, Boston.test, type = "response")
+pred.glm <- rep(0, length(probs))
+pred.glm[probs > 0.5] <- 1
+table(pred.glm, crim01.test)
+
+mean(pred.glm != crim01.test)
+
+```
