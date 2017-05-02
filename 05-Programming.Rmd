@@ -5,6 +5,7 @@
 ##Task 1
 ```{r}
 library(mosaic)
+library(ISLR)
 nbins = 10
 ```
 
