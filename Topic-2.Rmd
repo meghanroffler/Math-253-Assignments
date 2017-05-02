@@ -1,2 +1,223 @@
 # Topic 2 Exercises: Linear Regression
+# Meghan Roffler
+
+
+##3.6
+
+```{r}
+#3.6.1
+library(MASS)
+library(ISLR)
+```
+
+```{r}
+#3.6.2
+?Boston
+
+attach(Boston)
+lm.fit = lm(medv~lstat)
+
+summary = summary(lm.fit)
+names = names(lm.fit)
+coefficients = coef(lm.fit)
+confidence_interval = confint(lm.fit)
+prediction = predict(lm.fit ,data.frame(lstat=(c(5,10,15))), interval ="prediction")
+
+plot(lstat ,medv ,pch = "w")
+abline (lm.fit ,lwd=3,col ="aquamarine")
+
+par(mfrow=c(2,2))
+plot(lm.fit)
+
+plot(predict (lm.fit), residuals (lm.fit))
+plot(predict (lm.fit), rstudent (lm.fit))
+
+plot(hatvalues (lm.fit))
+which.max(hatvalues (lm.fit))
+```
+
+```{r}
+#3.6.3
+lm.fit = lm(medv~lstat+age)
+summary(lm.fit)
+
+lm.fit=lm(medv~.,data=Boston)
+summary (lm.fit)
+
+library (car)
+vif(lm.fit)
+
+lm.fit1 = lm(medv~.-age ,data=Boston )
+lm.fit1=update(lm.fit , ~.-age)
+summary (lm.fit1)
+```
+
+```{r}
+#3.6.4
+summary (lm(medv~lstat*age ,data=Boston))
+```
+
+```{r}
+#3.6.5
+lm.fit2=lm(medv~lstat+I(lstat^2))
+summary (lm.fit2)
+
+lm.fit=lm(medv~lstat)
+anova(lm.fit ,lm.fit2)
+
+par(mfrow=c(2,2))
+plot(lm.fit2)
+
+lm.fit5=lm(medv~poly(lstat ,5))
+summary (lm.fit5)
+
+summary(lm(medv~log(rm),data=Boston))
+```
+
+```{r}
+#3.6.6
+names(Carseats)
+lm.fit=lm(Sales~.+Income :Advertising +Price:Age ,data=Carseats )
+summary (lm.fit)
+
+attach(Carseats )
+contrasts (ShelveLoc )
+?contrasts
+```
+
+```{r}
+#3.6.7
+LoadLibraries = function() {
+  library(ISLR)
+  library(MASS)
+  print("The libraries have been loaded.")
+}
+
+LoadLibraries
+LoadLibraries()
+```
+
+
+
+##3.7.3
+a) iii is Correct. This is because for females, the least squares line is yhat = 85 + 10(GPA) + 0.07(IQ) + 0.01(GPA x IQ) while for males it's yhat = 50 + 20(GPA) + 0.07(IQ) + 0.01(GPA x IQ). So males on average have a lower starting salary than females if they have a low GPA (a lower intercept of 50 compared to 85 for females). However, if their GPA is high enough, they will have a higher starting salary than females. More specifically, if GPA is over 3.5, males will have higher starting salary than females. 
+
+b) IQ = 110. GPA = 4. 
+yhat = 85 + 10(4) + 0.07(110) + 0.01(4 x 110) = 137.1
+predicted starting salary = 137,100
+
+c) False. To test whether the GPA/IQ interaction term is valid or not, should do a hypothesis test using anova. 
+
+
+
+##3.7.4
+a) It is difficult to say for sure which RSS will be lower. However, since we know the true relationship between X and Y is linear, it is most likely that the RSS for the linear regression model will be lower as the least squares regression line is probably closer to the true regression line. 
+
+b) Since we dont have the test data, we don't have enough information to make a conclusion. However, the polynomial regression will most likely have a higher test RSS since the fit from training data will have more error than the linear regression. 
+
+c) The polynomial regression will have lower train RSS because it have a higher flexibility. No matter the trye relationship of the regression, a more flexible model will end up having a lower RSS because it will more closely follow the sample points. 
+
+d) Since we dont have the test data, we don't have enough information to make a conclusion. We dont know what level of flexibility will fit the data better, as we dont know "how far it is from linear". Therefore, it can go either way. If the true regression is more linear than cubic, the linear regression test RSS could be lower, and vice versa. 
+
+
+
+##3.7.13 
+a)
+```{r}
+set.seed(1)
+x <- rnorm(100)
+```
+
+b)
+```{r}
+eps <- rnorm(100, sd = sqrt(0.25))
+```
+
+c)
+```{r}
+y <- -1 + 0.5*x + eps
+length(y)
+```
+β0 = -1
+β1 = 0.5
+
+d) 
+```{r}
+plot(x,y)
+```
+There seems to be a linear relationship with some noise created by the eps variable. 
+
+e) 
+```{r}
+linfit <- lm(y ~ x)
+summary(linfit)
+```
+The β0hat = -1.01 and β1hat = 0.499 are close to β0 = -1 and β1 = 0.5. This model has very low (near zero) p values which means we can reject null hypothesis.
+
+f) 
+```{r}
+plot(x, y)
+abline(linfit, col = "red")
+abline(-1, 0.5, col = "blue")
+legend("topleft", c("Least square", "Regression"), col = c("red", "blue"), lty = c(1, 1))
+```
+
+g)
+```{r}
+polyfit <- lm(y ~ x + I(x^2))
+summary(polyfit)
+```
+We see from the summary that the p value for x^2 is above 0.05 so it is not significant. This means there isn't sufficient evidence that the quadratic term improves the model.
+
+h) 
+```{r}
+set.seed(1)
+eps <- rnorm(100, sd = 0.1)
+x <- rnorm(100)
+y <- -1 + 0.5 * x + eps
+plot(x, y)
+linfit1 <- lm(y ~ x)
+summary(linfit1)
+abline(linfit1, col = "red")
+abline(-1, 0.5, col = "blue")
+legend("topleft", c("Least square", "Regression"), col = c("red", "blue"), lty = c(1, 1))
+```
+I reduced noise by decreasing the variance of the normal distribution used to generate the error term. Now we have a higher R^2 and lower RSE.
+
+i) 
+```{r}
+set.seed(1)
+eps <- rnorm(100, sd = 20)
+x <- rnorm(100)
+y <- -1 + 0.5 * x + eps
+plot(x, y)
+linfit2 <- lm(y ~ x)
+summary(linfit2)
+abline(linfit2, col = "red")
+abline(-1, 0.5, col = "blue")
+legend("topleft", c("Least square", "Regression"), col = c("red", "blue"), lty = c(1, 1))
+```
+I increased noise by increasing the variance of the normal distribution used to generate the error term. The relationship is no longer as linear as before, and we have a lower R^2 and higher RSE. Also we can see from the plot that the least square line is further apart from the regression line.
+
+j) 
+```{r}
+original = confint(linfit)
+lessnoise = confint(linfit1)
+morenoise = confint(linfit2)
+
+original
+lessnoise
+morenoise
+```
+All intervals are centered on approximately 0.5. As the noise increases, the confidence intervals widen. With less noise, confidence intervals get more narrow.
+
+
+
+##On p. 66 the authors state, “This is clearly not true in Fig. 3.1” Explain why.
+For these formulas to be strictly valid, we need to assume that the errors i for each observation are uncorrelated with common variance σ2. This is clearly not true in Figure 3.1, but the formula still turns out to be a good approximation. We know this because for lower values of TV, the residuals are smaller while for larger values of TV, the residuals are higher. 
+
+##On p. 77 the authors state, “In this case we cannot even fit the multiple regression models using least squares ….” Explain why.
+
+This is because sometimes we have a very large number of variables. If p>n then there are more coefficients βj to estimate than observations from which to estimate them. In this case we cannot even fit the multiple linear regression model using least squares. In other words, when there are more coefficients than cases, there will be an infinite number of solutions all with no residuals. 
+
 
