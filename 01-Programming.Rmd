@@ -6,6 +6,7 @@
 ##Task 1
 ```{r}
 library(mosaic)
+library(ISLR)
 ```
 
 ##Task 2 
