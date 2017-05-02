@@ -1,6 +1,65 @@
 # In-Class Programming Activity, Day 5
 
-Your work goes here ...
+##Meghan Roffler
+
+##Task 1
+```{r}
+library(mosaic)
+nbins = 10
+```
+
+##Task2
+```{r}
+evenly_spaced = seq(min(Galton$height), max(Galton$height), length=nbins + 1)
+```
+
+##Task3
+```{r}
+bin_counts <-table(cut(Galton$height, breaks = evenly_spaced))
+```
+
+##Task4
+```{r}
+xL = evenly_spaced[-11]
+xR = evenly_spaced[-1]
+count = as.numeric(bin_counts)
+hist_basics = data.frame(xL, xR, count)
+```
+
+##Task5
+```{r}
+make_one_bar <- function(point) {
+  xLeft <- point$xL
+  xRight <- point$xR
+  height <- point$count
+  res <- data.frame(
+    x = c(xLeft, xLeft, xRight, xRight, NA), 
+    y = c(    0, height, height,     0, NA)
+  )
+  res
+}
+
+one_to_five <- function(hist_data) {
+  bars <- NULL
+  for (k in 1:nrow(hist_data)) {
+    new_bar <- make_one_bar(hist_data[k, ])
+    bars <- rbind(bars, new_bar)
+  }
+  bars
+}
+
+My_bars = one_to_five(hist_basics)
+
+```
+
+#Task6
+```{r}
+plot(My_bars, type="n")
+lines(My_bars)
+polygon(My_bars, col="blue")
+```
+
+
 
 
 
