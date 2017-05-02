@@ -1,2 +1,130 @@
 # Topic 6 Exercises: Selecting Model Terms
 
+##Meghan Roffler
+
+
+# 6.8.1
+
+a.) The model with k predictors which has the smallest training RSS is the one obtained from best subset selection as it is the one selected among all k predictors models. The best subset will never be worse than the other two, because best subset considers all of the models considered by the stepwise selection methods.
+
+b.) Best subset selection may have the smallest test RSS because it takes into account more models than the other methods. However, for any particular testing set, either of the three might be best.
+
+c.) 
+
+i. True. At k+1, forward selection has added a new predictor to those at k.
+ii. True. At k, backward selection has deleted a predictor from those at k+1.
+iii. False. The models at any k for forward and backward selection do not necessarily have overlap.
+iv. False. Same reason as in (3).
+v. False. Predictors used at kk may be completely different from predictors used at k+1.
+
+# 6.8.2
+a.) The lasso, relative to least squares, is :
+iii. The lasso is less flexible and will give improved prediction accuracy when its increase in bias is less than its decrease in variance.
+
+b.) Repeat (a) for ridge regression relative to least squares:
+iii. Same as lasso, ridge regression is less flexible and will give improved prediction accuracy when its increase in bias is less than its decrease in variance.
+
+c.) Repeat (a) for non-linear methods relative to least squares:
+ii. Non-linear methods are more flexible and will give improved prediction accuracy when their increase in variance are less than their decrease in bias.
+
+# 6.8.9
+
+a.) 
+```{r}
+library(ISLR)
+data(College)
+set.seed(11)
+train = sample(1:dim(College)[1], dim(College)[1] / 2)
+test <- -train
+College.train <- College[train, ]
+College.test <- College[test, ]
+```
+
+b.) 
+```{r}
+fit.lm <- lm(Apps ~ ., data = College.train)
+pred.lm <- predict(fit.lm, College.test)
+mean((pred.lm - College.test$Apps)^2)
+```
+
+#### The test MSE is 1.538442210^{6}
+
+c.) 
+```{r}
+library(glmnet)
+train.mat <- model.matrix(Apps ~ ., data = College.train)
+test.mat <- model.matrix(Apps ~ ., data = College.test)
+grid <- 10 ^ seq(4, -2, length = 100)
+fit.ridge <- glmnet(train.mat, College.train$Apps, alpha = 0, lambda = grid, thresh = 1e-12)
+cv.ridge <- cv.glmnet(train.mat, College.train$Apps, alpha = 0, lambda = grid, thresh = 1e-12)
+bestlam.ridge <- cv.ridge$lambda.min
+bestlam.ridge
+```
+```{r}
+pred.ridge <- predict(fit.ridge, s = bestlam.ridge, newx = test.mat)
+mean((pred.ridge - College.test$Apps)^2)
+```
+
+#### The test MSE is higher for ridge regression than for least squares.
+
+d.) 
+```{r}
+fit.lasso <- glmnet(train.mat, College.train$Apps, alpha = 1, lambda = grid, thresh = 1e-12)
+cv.lasso <- cv.glmnet(train.mat, College.train$Apps, alpha = 1, lambda = grid, thresh = 1e-12)
+bestlam.lasso <- cv.lasso$lambda.min
+bestlam.lasso
+```
+```{r}
+pred.lasso <- predict(fit.lasso, s = bestlam.lasso, newx = test.mat)
+mean((pred.lasso - College.test$Apps)^2)
+```
+
+#### The test MSE is also higher for ridge regression than for least squares.
+
+```{r}
+predict(fit.lasso, s = bestlam.lasso, type = "coefficients")
+```
+
+
+e.) 
+```{r}
+library(pls)
+```
+```{r}
+fit.pcr <- pcr(Apps ~ ., data = College.train, scale = TRUE, validation = "CV")
+validationplot(fit.pcr, val.type = "MSEP")
+```
+```{r}
+pred.pcr <- predict(fit.pcr, College.test, ncomp = 10)
+mean((pred.pcr - College.test$Apps)^2)
+```
+
+#### The test MSE is also higher for PCR than for least squares.
+
+f.)
+```{r}
+fit.pls <- plsr(Apps ~ ., data = College.train, scale = TRUE, validation = "CV")
+validationplot(fit.pls, val.type = "MSEP")
+```
+
+```{r}
+pred.pls <- predict(fit.pls, College.test, ncomp = 10)
+mean((pred.pls - College.test$Apps)^2)
+```
+
+#### Here, the test MSE is lower for PLS than for least squares.
+
+g.)
+
+#### To compare the results obtained above, we have to compute the test R^2 for all models.
+
+```{r}
+test.avg <- mean(College.test$Apps)
+lm.r2 <- 1 - mean((pred.lm - College.test$Apps)^2) / mean((test.avg - College.test$Apps)^2)
+ridge.r2 <- 1 - mean((pred.ridge - College.test$Apps)^2) / mean((test.avg - College.test$Apps)^2)
+lasso.r2 <- 1 - mean((pred.lasso - College.test$Apps)^2) / mean((test.avg - College.test$Apps)^2)
+pcr.r2 <- 1 - mean((pred.pcr - College.test$Apps)^2) / mean((test.avg - College.test$Apps)^2)
+pls.r2 <- 1 - mean((pred.pls - College.test$Apps)^2) / mean((test.avg - College.test$Apps)^2)
+```
+
+#### So the test R^2 for least squares is 0.9044281, the test R^2 for ridge is 0.9000536, the test R^2 for lasso is 0.8984123, the test R^2 for pcr is 0.8127319 and the test R^2 for pls is 0.9062579. All models, except PCR, predict college applications with high accuracy.
