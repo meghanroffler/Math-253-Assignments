@@ -1,1 +1,51 @@
+# In-Class Programming Activity, Day 3
 
+##Meghan Roffler
+
+##Task1
+```{r}
+library(ISLR)
+data(College, package="ISLR")
+```
+
+##Task2
+```{r}
+College["Yield"] <- College["Enroll"]/College["Accept"]*1
+```
+
+##Task3
+```{r}
+all_indices <- 1:nrow(College)
+train_indices <- sample(all_indices, size=200)
+test_indices <- setdiff(all_indices,train_indices)
+Train_data <- data.frame(College[train_indices,])
+Test_data <- data.frame(College[test_indices,])
+```
+
+##Task4
+```{r}
+Yield_mod1 <- lm(Yield ~ Top10perc + Outstate + Expend, data=Train_data)
+```
+
+##Task5##
+```{r}
+Y_train <- Train_data$Yield
+fhat_train <- predict(Yield_mod1, newdata = Train_data)
+MSE_train <-mean(Yield_mod1$residuals^2)
+MSE_train
+```
+
+##Task6##
+```{r}
+Y_test <- Test_data$Yield
+fhat_test <- predict(Yield_mod1, newdata = Test_data)
+MSE_test <- mean(Yield_mod1$residuals^2)*1
+1*(MSE_test/MSE_train)
+```
+
+
+## Test statements
+
+```{r}
+scoreActivity::score253(3)
+```
