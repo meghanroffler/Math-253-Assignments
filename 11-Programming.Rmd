@@ -1,6 +1,47 @@
 # In-Class Programming Activity, Day 11
 
 Your work goes here ...
+## Meghan Roffler
+
+#Matrices and their Inverses
+```{r}
+Sigma <- matrix(c(1.0, -0.7, -0.7, 1.0), nrow=2, ncol=2, byrow=TRUE)
+Sigma_inv <- solve(Sigma)
+test_inverse <- Sigma %*% Sigma_inv
+```
+
+#Matrix Compositions 
+```{r}
+A <- chol(Sigma)  
+t(A) 
+t(A) %*% A 
+```
+
+#Orthogonal Vectors and Matrices
+```{r}
+x1 <- rnorm(10)
+x2 <- rnorm(10)
+x1 <- cbind(x1)
+x2 <- cbind(x2)
+X <- cbind(x1, x2)
+(t(X) %*% X)/nrow(X)  #covariance matrix
+w1 <- cbind(rnorm(10000))
+w2 <- cbind(rnorm(10000))
+W <- cbind(w1, w2)
+W_cov <- (t(W) %*% W)/nrow(W)
+W_cov
+```
+
+#Generating Correlated Random Vectors
+```{r}
+A_inv <- chol(solve(Sigma))
+Y <- X %*% A
+(t(Y) %*% Y)/nrow(Y)
+Y <- W %*% A
+(t(Y) %*% Y)/nrow(Y)
+plot(Y[,1], Y[,2], col=rgb(0,0,0,0.5))
+
+```
 
 
 
