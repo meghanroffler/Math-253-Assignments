@@ -1,8 +1,60 @@
 # In-Class Programming Activity, Day 10
 
 Your work goes here ...
+## Meghan Roffler
 
+#The Logistic Function
+```{r}
+library(ISLR)
+logistic <- function(x){
+  exp(x)/(1+exp(x))
+}
+```
 
+# Linear Combinations
+```{r}
+linear_combine <- function(data, coefs) {
+  result <- 0 
+  for (nm in names(coefs)) {
+    if (nm == "intercept") {
+      result <- result + coefs[[nm]]
+    } else {
+      if (! nm %in% names(data)) {
+        stop("Variable names in the coefficient vector doesn't exist in the data.")
+      } else {
+        result <- result + coefs[[nm]] * data[[nm]]
+      }
+    }
+  } 
+  result
+}
+
+linear_combine(data = Default, 
+               coefs = c(intercept = 3, balance = 0.00001, income = -0.0002))
+```
+
+#Probabilities
+```{r}
+LL_logistic <- function(data, coefs, outcome) {
+  vals <- linear_combine(data, coefs)
+  prob <- logistic(vals)
+  likelihood <- ifelse(outcome, prob, 1-prob)
+  sum(log(likelihood))
+}
+
+LL_logistic(data = Default, 
+            coefs = c(intercept = 1, income = -0.0001), 
+            outcome = Default$default == "Yes")
+```
+
+#Optimize
+```{r}
+best_coefs <- optim(c(intercept = 0, income = 0), 
+                    function(p) LL_logistic(data = Default, coefs = p, outcome =  Default$default=="Yes"), 
+                    control = list(fnscale =-1))
+best_coefs
+glm(default == "Yes" ~ income, data = Default, family = "binomial")
+```
 
 ## Test statements
 
