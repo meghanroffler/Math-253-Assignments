@@ -1,7 +1,40 @@
 # In-Class Programming Activity, Day 14
 
 Your work goes here ...
+##Meghan Roffler
 
+#Comparing OLS to Ridge
+```{r}
+library(glmnet)
+GenCont <- read.csv("http://tiny.cc/dcf/GenCont.csv")
+```
+
+```{r}
+compare_ols_ridge <- function(responses, predictors, lambda = 1) {
+  inds <- sample(1:nrow(GenCont), size = nrow(GenCont)/2)
+  trainPred <- predictors[inds, ]
+  testPred <- predictors[-inds, ]
+  trainRes <- responses[inds ]
+  testRes <- responses[-inds ]
+  
+  mod <- lm(trainRes ~ as.matrix(trainPred))
+  glm_mod <- glmnet(as.matrix(trainPred), as.matrix(trainRes), alpha = 0)
+  
+  pred_in <- predict(mod, trainPred)
+  pred_out <- predict(mod, testPred)
+  ols_in <- mean((pred_in - trainRes)^2)
+  ols_out <- mean((pred_out - testRes)^2)
+  
+  glm_in <- predict(glm_mod, as.matrix(trainPred))
+  glm_out <- predict(glm_mod, as.matrix(testPred))
+  ridge_in <- mean((glm_in - trainRes)^2)
+  ridge_out <- mean((glm_out - testRes)^2)
+  
+  list(lambda=lambda, ols_in=ols_in, ridge_in=ridge_in, ols_out=ols_out, ridge_out=ridge_out)
+}
+Shrink_results <- compare_ols_ridge(GenCont$Phenotypes, GenCont[,-1], lambda=1)
+
+```
 
 
 ## Test statements
