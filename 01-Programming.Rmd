@@ -47,7 +47,7 @@ task5y <- runif(1000, 0.0, 1.0)
 
 ##Task 5pi
 ```{r}
-lgth <- sqrt(task5x^2+task5y^2)
+lgth <- sqrt(task5x^2+task5y^2)*1
 lessthanone <- lgth <= 1
 num <- sum(lessthanone)
 task5pi<- 4*(num/1000)
