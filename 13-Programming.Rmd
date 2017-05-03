@@ -1,7 +1,46 @@
 # In-Class Programming Activity, Day 13
 
 Your work goes here ...
+##Meghan Roffler
 
+#A Function Framework
+```{r}
+k_fold1 <- function(formula, method = lm, data = mtcars, predfun = predict, k = 10) {
+  sets <- rep(1:k, each = nrow(mtcars)/k, length.out = nrow(data))
+  mspe <- numeric(k)
+  
+  for (i in 1:k) {
+    For_Training <- data[sets != i, ]
+    For_Testing <- data[sets == i, ]
+    mod <- lm(mpg ~ hp + wt + am, data = For_Training)
+    pred_vals <-predict(mod, newdata = For_Testing)
+    mspe[i] <- mean((For_Testing[["mpg"]] - pred_vals)^2)
+  }
+  error_estimate <- mean(mspe)
+  return(error_estimate)
+}
+
+k_fold <- function(formula, method = lm, data = mtcars, predfun = predict, k = 10) {
+  sets <- rep(1:k, each = nrow(data)/k, length.out = nrow(data))
+  mspe <- numeric(k)
+  
+  for (i in 1:k) {
+    For_Training <- data[sets != i, ]
+    For_Testing <- data[sets == i, ]
+    mod <- method(formula, data = For_Training)
+    pred_vals <-predfun(mod, newdata = For_Testing)
+    mspe[i] <- mean((For_Testing[[as.character(formula[[2]])]] - pred_vals)^2)
+  }
+  error_estimate <- mean(mspe)
+  return(error_estimate)
+}
+```
+
+#Generalizing the Function
+```{r}
+k_fold(formula = mpg ~ hp + wt + am, data = mtcars)
+k_fold1(formula = mpg ~ hp + wt + am, data = mtcars)
+```
 
 
 ## Test statements
