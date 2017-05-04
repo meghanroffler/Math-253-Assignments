@@ -37,101 +37,143 @@ The odds that she will default are 19%.
 library(ISLR)
 data(Auto)
 attach(Auto)
-mpg01 <- rep(0, length(mpg))
-mpg01[mpg > median(mpg)] <- 1
-Auto <- data.frame(Auto, mpg01)
+
+Auto$mpg01 <- with(ifelse(mpg > median(mpg), 1, 0), data=Auto)
 ```
 ##part b
 
 ```{r}
-?Auto 
-
-boxplot(cylinders ~ mpg01, data = Auto, main = "Cylinders vs mpg01")
-boxplot(displacement ~ mpg01, data = Auto, main = "Displacement vs mpg01")
-boxplot(weight ~ mpg01, data = Auto, main = "Weight vs mpg01")
-boxplot(acceleration ~ mpg01, data = Auto, main = "Acceleration vs mpg01")
-boxplot(year ~ mpg01, data = Auto, main = "Year vs mpg01")
+pairs(Auto[,-9])
+boxplot(with(Auto, cylinders ~ mpg01), main = "Cylinders vs mpg01", xlab = "mpg01", ylab = "Cylinders")
+boxplot(Auto$weight ~ Auto$mpg01, main = "Weight vs mpg01", xlab = "mpg01", ylab = "Weight")
+boxplot(Auto$acceleration ~ Auto$mpg01, main = "Acceleration vs mpg01", xlab = "mpg01", ylab = "Acceleration")
+boxplot(Auto$displacement ~ Auto$mpg01, main = "Displacement vs mpg01", xlab = "mpg01", ylab = "Displacement")
+boxplot(Auto$origin ~ Auto$mpg01, main = "Origin vs mpg01", xlab = "mpg01", ylab = "Origin")
+boxplot(Auto$year ~ Auto$mpg01, main = "Year vs mpg01", xlab = "mpg01", ylab = "Year")
 ```
 #We may conclude that there exists some association between “mpg01” and “cylinders”, “weight”, “displacement”. 
 
 ##part c
 ```{r}
-training_inds <- sample(1:nrow(Auto), size = nrow(Auto) / 2)
-Training <- Auto[training_inds,]
-Testing  <- Auto[ - training_inds, ]
+set.seed(1)
+inds <- sample(1:nrow(Auto), size = nrow(Auto)/2)
+trainSet <- Auto[inds, ]
+testSet <- Auto[-inds, ]
 ```
 
 ##part d
 ```{r}
-library(MASS)
-mod_formula <- mpg01 ~ cylinders + displacement + weight
-mod1 <- lda(mod_formula, data = Training)
-preds1 <- predict(mod1, newdata = Testing)
-mean(Testing$mpg01 != (preds1$posterior[, 2] >= 0.5))
+lda.fit <- lda(mpg01 ~ displacement + weight + cylinders, data = trainSet)
+lda.pred <- predict(lda.fit, testSet)
+table(testSet$mpg01, lda.pred$class)
+
+sum(lda.pred$class!=testSet$mpg01)/nrow(testSet)
 ```
-## We have a test error rate of around 11.22%
+## We have a test error rate of around 10.2%
 
 ##part e
 ```{r}
-mod2 <- qda(mod_formula, data = Training)
-preds2 <- predict(mod2, newdata = Testing )
-mean(Testing$mpg01 != (preds2$posterior[, 2] >= 0.5))
+qda.fit <- qda(mpg01 ~ displacement + weight + cylinders, data = trainSet)
+qda.pred <- predict(qda.fit, testSet)
+table(testSet$mpg01, qda.pred$class)
+sum(qda.pred$class != testSet$mpg01)/nrow(testSet)
 ```
-## We have a test error rate of around 9.69%
+## We have a test error rate of around 9.18%
 
 ##part f
 ```{r}
-mod3 <- glm(mod_formula, 
-            data = Training, family = "binomial")
-preds3 <- predict(mod3, newdata = Testing )
-mean(Testing$mpg01 != (preds3 >= 0.5))
+logReg <- glm(mpg01 ~ displacement + weight + cylinders, data = trainSet, family = "binomial")
+summary(logReg)
+logReg.probs <- predict(logReg, testSet, type="response")
+logReg.pred <- ifelse(logReg.probs > 0.5, 1, 0)
+table(logReg.pred, testSet$mpg01)
+mean(logReg.pred != testSet$mpg01)
 ```
-## We have a test error rate of around 10.71%
+## We have a test error rate of around 10.2%
 
 ##part g
 ```{r}
-k_vals <- c(1:50)
-error_rate <- rep(NA, length(k_vals))
-Train_mat <- model.matrix(mod_formula, data = Training)
-Test_mat  <- model.matrix(mod_formula, data = Testing)
-for (i in 1:length(k_vals)) {
-  preds <- class::knn(Train_mat, Test_mat, Training$mpg01, k = k_vals[i])
-  error_rate[i] = mean(Testing$mpg01 != as.logical(preds))}
+set.seed(1)
+training <- trainSet[,c("displacement", "weight", "cylinders")]
+testing <- testSet[,c("displacement", "weight", "cylinders")]
+library(class)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 1)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 2)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 3)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 4)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 5)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 6)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 7)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 8)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 9)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
+knn.pred <- class::knn(training, testing, trainSet$mpg01, k = 10)
+table(knn.pred, testSet$mpg01)
+mean(knn.pred != testSet$mpg01)
 ```
 
-## A K of 10 to 20 is good.
+## Around K=7
 
 ##4.7.13
 
 ```{r}
 library(MASS)
-attach(Boston)
-crim01 <- rep(0, length(crim))
-crim01[crim > median(crim)] <- 1
-Boston <- data.frame(Boston, crim01)
+Boston$crim01 <- ifelse(Boston$crim > median(Boston$crim), 1, 0)
+boxplot(with(Boston, indus ~ crim01), main = "indus vs crim01", xlab = "crim01", ylab = "indus")
+boxplot(with(Boston, nox ~ crim01), main = "nox vs crim01", xlab = "crim01", ylab = "nox")
+boxplot(with(Boston, age ~ crim01), main = "age vs crim01", xlab = "crim01", ylab = "age")
+boxplot(with(Boston, dis ~ crim01), main = "dis vs crim01", xlab = "crim01", ylab = "dis")
+boxplot(with(Boston, tax ~ crim01), main = "tax vs crim01", xlab = "crim01", ylab = "tax")
+boxplot(with(Boston, lstat ~ crim01), main = "lstat vs crim01", xlab = "crim01", ylab = "lstat")
+boxplot(with(Boston, black ~ crim01), main = "black vs crim01", xlab = "crim01", ylab = "black")
+boxplot(with(Boston, rad ~ crim01), main = "rad vs crim01", xlab = "crim01", ylab = "rad")
+boxplot(with(Boston, ptratio ~ crim01), main = "ptratio vs crim01", xlab = "crim01", ylab = "ptratio")
+boxplot(with(Boston, medv ~ crim01), main = "medv vs crim01", xlab = "crim01", ylab = "medv")
 
-train <- 1:(length(crim) / 2)
-test <- (length(crim) / 2 + 1):length(crim)
-Boston.train <- Boston[train, ]
-Boston.test <- Boston[test, ]
-crim01.test <- crim01[test]
 
-fit.glm <- glm(crim01 ~ . - crim01 - crim, data = Boston, family = binomial, subset = train)
+set.seed(1)
+inds1 <- sample(1:nrow(Boston), size = nrow(Boston)/2)
+boston.train <- Boston[inds1, ]
+boston.test <- Boston[-inds1, ]
 
-probs <- predict(fit.glm, Boston.test, type = "response")
-pred.glm <- rep(0, length(probs))
-pred.glm[probs > 0.5] <- 1
-table(pred.glm, crim01.test)
 
-mean(pred.glm != crim01.test)
+#LDA Model = 16.99% Test Error
+lda.fit1 <- lda(crim01 ~ zn + indus + nox + age + dis + tax + lstat + black +  rad + ptratio + medv, data = boston.train)
+lda.pred1 <- predict(lda.fit1, boston.test)
 
-fit.glm <- glm(crim01 ~ . - crim01 - crim - chas - nox, data = Boston, family = binomial, subset = train)
+mean(lda.pred1$class!=boston.test$crim01)
 
-probs <- predict(fit.glm, Boston.test, type = "response")
-pred.glm <- rep(0, length(probs))
-pred.glm[probs > 0.5] <- 1
-table(pred.glm, crim01.test)
 
-mean(pred.glm != crim01.test)
+#Logistic Regression = 11.86% Test Error
+logreg1 <- glm(crim01 ~ zn + indus + nox + age + dis + tax + lstat + black +  rad + ptratio + medv, data = boston.train, family = "binomial")
+summary(logreg1)
+logreg.probs <- predict(logreg1, boston.test, type="response")
+logreg.pred <- ifelse(logreg.probs > 0.5, 1, 0)
 
+mean(logreg.pred != boston.test$crim01)
+
+
+#KNN Model = 9.09% Test Error 
+trainingBoston <- boston.train[,c("zn", "indus", "nox", "age", "dis", "tax", "lstat", "black", "rad", "ptratio", "medv")]
+testingBoston <- boston.test[,c("zn", "indus", "nox", "age", "dis", "tax", "lstat", "black", "rad", "ptratio", "medv")]
+knn.pred <- class::knn(trainingBoston, testingBoston, boston.train$crim01, k=1)
+table(knn.pred, boston.test$crim01)
+mean(knn.pred != boston.test$crim01)
 ```
