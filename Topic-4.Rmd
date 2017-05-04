@@ -10,7 +10,7 @@ output:
 (4.2) <- p(X) = eβ0+β1X/(1+eβ0+β1X)
 (4.3) <- p(X)/(1−p(X)) = eβ0+β1X
 
-If we want to prove that they're equivalent, we first set eβ0+β1X to Y. 
+If we want to prove that they're equivalent, we first set eβ0+β1X to y.
 That means 
 (4.2) <-  P(X) = Y/(1+Y)  <-  P(X)(1+Y) = Y  <-  P(X)+P(X)Y = Y  <-  P(X) = Y-P(X)Y  <-  
 P(X) = Y(1-P(X))  <-  P(X)/(1-P(X)) = Y
@@ -35,8 +35,8 @@ The odds that she will default are 19%.
 ```{r}
 ##part a
 library(ISLR)
-data(Auto)
-attach(Auto)
+library(MASS)
+#Auto <- read.csv("/home/local/MAC/jpark2/Math-253-Assignments/Auto.csv")
 
 Auto$mpg01 <- with(ifelse(mpg > median(mpg), 1, 0), data=Auto)
 ```
